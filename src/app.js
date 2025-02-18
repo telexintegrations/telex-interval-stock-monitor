@@ -48,8 +48,15 @@ const createApp = () => {
           app_description: "Monitors stock prices using real-time data",
           app_url: baseUrl,
           app_logo: "https://i.imgur.com/lZqvffp.png",
-          background_color: "#fff"
+          background_color: "#fff",
         },
+        integration_category: "Finance & Payments",
+        key_features: [
+          "Monitor up to 6 customizable stock symbols",
+          "Receive real-time price updates via webhook",
+          "Configurable update intervals using cron syntax",
+          "Seamless integration with dashboards and alert systems"
+        ],
         integration_type: "interval",
         settings: [
           { label: "symbol-1", type: "text", required: true, default: "AAPL" },
@@ -60,7 +67,8 @@ const createApp = () => {
           { label: "symbol-6", type: "text", required: true, default: "META" },
           { label: "interval", type: "text", required: true, default: "*/5 * * * *" }
         ],
-        tick_url: `${baseUrl}/tick`
+        tick_url: `${baseUrl}/tick`,
+        target_url: `${baseUrl}/api/integration`
       }
     });
   });
