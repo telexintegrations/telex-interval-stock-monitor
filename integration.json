@@ -1,0 +1,33 @@
+{
+  "data": {
+    "descriptions": {
+      "app_name": "Stock Price Monitor",
+      "app_description": "Monitors stock prices",
+      "app_url": "http://localhost:8000",
+      "app_logo": "https://i.imgur.com/lZqvffp.png",
+      "background_color": "#fff"
+    },
+    "integration_type": "interval",
+    "settings": [
+      {
+        "label": "symbol-1",
+        "type": "text",
+        "required": true,
+        "default": "AAPL"
+      },
+      {
+        "label": "symbol-2",
+        "type": "text",
+        "required": true,
+        "default": "MSFT"
+      },
+      {
+        "label": "interval",
+        "type": "text",
+        "required": true,
+        "default": "* * * * *"
+      }
+    ],
+    "tick_url": "http://localhost:8000/tick"
+  }
+}
