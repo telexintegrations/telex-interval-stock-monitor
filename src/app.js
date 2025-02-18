@@ -2,7 +2,8 @@ require('dotenv').config();
 const express = require('express');
 const axios = require('axios');
 const bodyParser = require('body-parser');
-
+const cron = require('node-cron');
+const activeJobs = new Map();
 const port = process.env.PORT || 3000;
 
 const createApp = () => {
@@ -53,6 +54,10 @@ const createApp = () => {
         settings: [
           { label: "symbol-1", type: "text", required: true, default: "AAPL" },
           { label: "symbol-2", type: "text", required: true, default: "MSFT" },
+          { label: "symbol-3", type: "text", required: true, default: "GOOGL" },
+          { label: "symbol-4", type: "text", required: true, default: "AMZN" },
+          { label: "symbol-5", type: "text", required: true, default: "TSLA" },
+          { label: "symbol-6", type: "text", required: true, default: "META" },
           { label: "interval", type: "text", required: true, default: "*/5 * * * *" }
         ],
         tick_url: `${baseUrl}/tick`
@@ -62,58 +67,73 @@ const createApp = () => {
 
   // Monitoring Task
   const monitorTask = async (payload) => {
-    try {
-      const symbols = payload.settings
-        .filter(setting => setting.label.startsWith('symbol'))
-        .map(setting => setting.default);
+  try {
+    const symbols = payload.settings
+      .filter(setting => setting.label.startsWith('symbol'))
+      .map(setting => setting.default);
 
-      // Add delay between requests to avoid rate limiting
-      const results = [];
-      for (const symbol of symbols) {
-        const result = await fetchStockPrice(symbol);
-        results.push(result);
-        await new Promise(resolve => setTimeout(resolve, 1000)); // 1 second delay
-      }
+    console.log('Tracking stocks:', symbols.join(', '));
+    console.log('Schedule:', payload.settings.find(s => s.label === 'interval')?.default);
 
-      const message = results.join("\n");
-      const status = results.every(r => r.includes("USD")) ? "success" : "error";
-
-      const data = {
-        event_name: "Stock Price Update",
-        message: message,
-        status: status,
-        username: "Stock Monitor"
-      };
-
-      await axios.post(payload.return_url, data, {
-        headers: {
-          "Accept": "application/json",
-          "Content-Type": "application/json"
-        }
-      });
-
-    } catch (error) {
-      console.error('Monitor task failed:', error);
+    const results = [];
+    for (const symbol of symbols) {
+      const result = await fetchStockPrice(symbol);
+      results.push(result);
+      await new Promise(resolve => setTimeout(resolve, 1000)); // 1 second delay
     }
-  };
 
-  // Tick Endpoint
-  app.post('/tick', async (req, res) => {
-    try {
-      // Validate required fields
-      if (!req.body?.return_url) {
-        return res.status(400).json({ error: "Missing return_url" });
+    const message = results.join("\n");
+    const status = results.every(r => r.includes("USD")) ? "success" : "error";
+
+    const data = {
+      event_name: "Stock Price Update",
+      message: message,
+      status: status,
+      username: "Stock Monitor"
+    };
+
+    console.log('Stock data prepared:', data);
+
+    const response = await axios.post(payload.return_url, data, {
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
       }
+    });
 
-      const payload = req.body;
-      monitorTask(payload);
-      res.status(202).json({ status: 'accepted' });
+    console.log('Webhook sent successfully:', response.data);
 
-    } catch (error) {
-      console.error('Tick endpoint error:', error);
-      res.status(500).json({ error: 'Internal server error' });
+  } catch (error) {
+    console.error('Monitor task failed:', error.response?.data || error.message);
+  }
+};
+
+// Tick Endpoint
+app.post('/tick', async (req, res) => {
+    console.log('Received tick request:', JSON.stringify(req.body, null, 2));
+
+    const { return_url, settings } = req.body;
+    if (!return_url) return res.status(400).json({ error: 'Missing return_url' });
+
+    const interval = settings.find(s => s.label === 'interval')?.default || '* * * * *';
+
+    console.log(`Schedule: ${interval}`);
+
+    // Prevent duplicate scheduling
+    if (activeJobs.has(return_url)) {
+        console.log(`Cron job for ${return_url} already scheduled`);
+        return res.json({ success: true, message: 'Tick already scheduled' });
     }
-  });
+
+    // Schedule and store the job
+    const job = cron.schedule(interval, async () => {
+        console.log(`Running scheduled task for return_url: ${return_url}`);
+        await monitorTask({ return_url, settings });
+    });
+
+    activeJobs.set(return_url, job);
+    res.json({ success: true, message: 'Tick received and scheduled' });
+});
 
   // API Verification Endpoint
   app.get('/verify-api', async (req, res) => {
