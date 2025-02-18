@@ -49,17 +49,64 @@ Returns the integration schema for the Telex interval integration.
     "descriptions": {
       "app_name": "Stock Price Monitor",
       "app_description": "Monitors stock prices using real-time data",
-      "app_url": "http://localhost:3000",
+      "app_url": "https://1bb4-154-161-183-133.ngrok-free.app",
       "app_logo": "https://i.imgur.com/lZqvffp.png",
       "background_color": "#fff"
     },
+    "integration_category": "Finance & Payments",  
+    "key_features": [
+      "Monitor up to 6 customizable stock symbols",
+      "Receive real-time price updates via webhook",
+      "Configurable update intervals using cron syntax",
+      "Seamless integration with dashboards and alert systems"
+    ],
     "integration_type": "interval",
     "settings": [
-      { "label": "symbol-1", "type": "text", "required": true, "default": "AAPL" },
-      { "label": "symbol-2", "type": "text", "required": true, "default": "MSFT" },
-      { "label": "interval", "type": "text", "required": true, "default": "*/5 * * * *" }
+      {
+        "label": "symbol-1",
+        "type": "text",
+        "required": true,
+        "default": "AAPL"
+      },
+      {
+        "label": "symbol-2",
+        "type": "text",
+        "required": true,
+        "default": "MSFT"
+      },
+      {
+        "label": "symbol-3",
+        "type": "text",
+        "required": true,
+        "default": "GOOGL"
+      },
+      {
+        "label": "symbol-4",
+        "type": "text",
+        "required": true,
+        "default": "AMZN"
+      },
+      {
+        "label": "symbol-5",
+        "type": "text",
+        "required": true,
+        "default": "TSLA"
+      },
+      {
+        "label": "symbol-6",
+        "type": "text",
+        "required": true,
+        "default": "META"
+      },
+      {
+        "label": "interval",
+        "type": "text",
+        "required": true,
+        "default": "*/5 * * * *"
+      }
     ],
-    "tick_url": "http://localhost:3000/tick"
+    "tick_url": "https://1bb4-154-161-183-133.ngrok-free.app/tick",
+    "target_url": "https://1bb4-154-161-183-133.ngrok-free.app/api/integration"  
   }
 }
 ```
