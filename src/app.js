@@ -161,6 +161,21 @@ app.post('/tick', async (req, res) => {
     activeJobs.set(return_url, job);
     res.json({ success: true, message: 'Tick received and scheduled' });
 });
+
+
+  // stop monitoring
+
+  app.post('/stop', (req, res) => {
+  const { return_url } = req.body;
+  const job = activeJobs.get(return_url);
+  if (job) {
+    job.stop();
+    activeJobs.delete(return_url);
+    return res.json({ success: true, message: 'Job stopped successfully' });
+  }
+  res.status(404).json({ error: 'No active job found for this return_url' });
+});
+
   // API Verification Endpoint
   app.get('/verify-api', async (req, res) => {
     try {
