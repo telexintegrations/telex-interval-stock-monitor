@@ -43,6 +43,10 @@ const createApp = () => {
     const baseUrl = `${req.protocol}://${req.get('host')}`;
     res.json({
       data: {
+        date: {
+          'created_at': '2025-02-18',
+          'updated_at': '2025-03-18'
+        },
         descriptions: {
           app_name: "Stock Price Monitor",
           app_description: "Monitors stock prices using real-time data",
@@ -71,14 +75,14 @@ const createApp = () => {
             type: "dropdown",
             description: "Select how frequently you want to receive stock price updates.",
             required: true,
-            default: "*/15 * * * *", // Every 15 minutes
+            default: "*/15 * * * *",
             options: [
-            "*/5 * * * *",   // Every 5 minutes
-            "*/10 * * * *",  // Every 10 minutes
-            "*/15 * * * *",  // Every 15 minutes
-            "*/20 * * * *",  // Every 20 minutes
-            "*/30 * * * *",  // Every 30 minutes
-            "*/40 * * * *"   // Every 40 minutes
+            "*/5 * * * *",
+            "*/10 * * * *",
+            "*/15 * * * *",
+            "*/20 * * * *",
+            "*/30 * * * *",
+            "*/40 * * * *"
           ]          
           }
         ],
