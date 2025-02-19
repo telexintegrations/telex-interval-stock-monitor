@@ -55,7 +55,8 @@ const createApp = () => {
           "Monitor up to 6 customizable stock symbols",
           "Receive real-time price updates via webhook",
           "Configurable update intervals using cron syntax",
-          "Seamless integration with dashboards and alert systems"
+          "Built with Node.js, Express, and Finage API",
+
         ],
         integration_type: "interval",
         settings: [
@@ -65,7 +66,20 @@ const createApp = () => {
           { label: "symbol-4", type: "text", required: true, default: "AMZN" },
           { label: "symbol-5", type: "text", required: true, default: "TSLA" },
           { label: "symbol-6", type: "text", required: true, default: "META" },
-          { label: "interval", type: "text", required: true, default: "*/5 * * * *" }
+          {
+            label: "interval",
+            type: "dropdown",
+            description: "Select how frequently you want to receive stock price updates (hourly intervals).",
+            required: true,
+            default: "*/5 * * * *", // Every 5 minutes
+            options: [
+            "*/5 * * * *",   // Every 5 minutes
+            "*/10 * * * *",  // Every 10 minutes
+            "*/20 * * * *",  // Every 20 minutes
+            "*/30 * * * *",  // Every 30 minutes
+            "*/40 * * * *"   // Every 40 minutes
+          ]          
+          }
         ],
         tick_url: `${baseUrl}/tick`,
         target_url: `${baseUrl}/api/integration`
@@ -120,8 +134,13 @@ const createApp = () => {
 app.post('/tick', async (req, res) => {
     console.log('Received tick request:', JSON.stringify(req.body, null, 2));
 
-    const { return_url, settings } = req.body;
-    if (!return_url) return res.status(400).json({ error: 'Missing return_url' });
+    let { return_url, settings } = req.body;
+    if (!return_url) {
+        return_url = process.env.TELEX_WEBHOOK_URL;
+        if (!return_url) {
+            return res.status(400).json({ error: 'Missing return_url' });
+        }
+    }
 
     const interval = settings.find(s => s.label === 'interval')?.default || '* * * * *';
 
@@ -142,7 +161,6 @@ app.post('/tick', async (req, res) => {
     activeJobs.set(return_url, job);
     res.json({ success: true, message: 'Tick received and scheduled' });
 });
-
   // API Verification Endpoint
   app.get('/verify-api', async (req, res) => {
     try {
