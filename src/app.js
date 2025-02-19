@@ -69,7 +69,7 @@ const createApp = () => {
           {
             label: "interval",
             type: "dropdown",
-            description: "Select how frequently you want to receive stock price updates (hourly intervals).",
+            description: "Select how frequently you want to receive stock price updates.",
             required: true,
             default: "*/15 * * * *", // Every 15 minutes
             options: [
