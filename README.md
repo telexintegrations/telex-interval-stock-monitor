@@ -19,13 +19,13 @@ npm install
 
 ## Usage
 
-1. Copy the `.env.example` file to `.env` and fill in the required environment variables:
+1. Copy the [`.env.example`](./.env.example) file to `.env` and fill in the required environment variables:
 
     ```bash
     cp .env.example .env
     ```
 
-    Fill in your `FINAGE_API_KEY`, `PORT`, and `TELEX_WEBHOOK_URL` in the `.env` file.
+    Fill in your `FINAGE_API_KEY`, `PORT`, and `TELEX_WEBHOOK_URL` in the .env file.
 
 2. Start the application:
 
@@ -33,11 +33,11 @@ npm install
     npm start
     ```
 
-3. The application will run on the port specified in the `.env` file or default to port 3000.
+3. The application will run on the port specified in the .env file or default to port 3000.
 
 ## Endpoints
 
-### GET /integration.json
+### GET [/integration.json](http://_vscodecontentref_/2)
 
 Returns the integration schema for the Telex interval integration.
 
@@ -49,7 +49,7 @@ Returns the integration schema for the Telex interval integration.
     "descriptions": {
       "app_name": "Stock Price Monitor",
       "app_description": "Monitors stock prices using real-time data",
-      "app_url": "https://1bb4-154-161-183-133.ngrok-free.app",
+      "app_url": "deployed-app.com",
       "app_logo": "https://i.imgur.com/lZqvffp.png",
       "background_color": "#fff"
     },
@@ -58,55 +58,20 @@ Returns the integration schema for the Telex interval integration.
       "Monitor up to 6 customizable stock symbols",
       "Receive real-time price updates via webhook",
       "Configurable update intervals using cron syntax",
-      "Seamless integration with dashboards and alert systems"
+      "Built with Node.js, Express, and Finage API"
     ],
     "integration_type": "interval",
     "settings": [
-      {
-        "label": "symbol-1",
-        "type": "text",
-        "required": true,
-        "default": "AAPL"
-      },
-      {
-        "label": "symbol-2",
-        "type": "text",
-        "required": true,
-        "default": "MSFT"
-      },
-      {
-        "label": "symbol-3",
-        "type": "text",
-        "required": true,
-        "default": "GOOGL"
-      },
-      {
-        "label": "symbol-4",
-        "type": "text",
-        "required": true,
-        "default": "AMZN"
-      },
-      {
-        "label": "symbol-5",
-        "type": "text",
-        "required": true,
-        "default": "TSLA"
-      },
-      {
-        "label": "symbol-6",
-        "type": "text",
-        "required": true,
-        "default": "META"
-      },
-      {
-        "label": "interval",
-        "type": "text",
-        "required": true,
-        "default": "*/5 * * * *"
-      }
+      { "label": "symbol-1", "type": "text", "required": true, "default": "AAPL" },
+      { "label": "symbol-2", "type": "text", "required": true, "default": "MSFT" },
+      { "label": "symbol-3", "type": "text", "required": true, "default": "GOOGL" },
+      { "label": "symbol-4", "type": "text", "required": true, "default": "AMZN" },
+      { "label": "symbol-5", "type": "text", "required": true, "default": "TSLA" },
+      { "label": "symbol-6", "type": "text", "required": true, "default": "META" },
+      { "label": "interval", "type": "dropdown", "required": true, "default": "0 * * * *", "options": [ "0 * * * *", "0 */2 * * *", "0 */3 * * *", "0 */4 * * *", "0 */5 * * *", "0 */6 * * *" ] }
     ],
-    "tick_url": "https://1bb4-154-161-183-133.ngrok-free.app/tick",
-    "target_url": "https://1bb4-154-161-183-133.ngrok-free.app/api/integration"  
+    "tick_url": "https://deployed-app.com/api/tick",
+    "target_url": "https://deployed-app.com/api/integration"  
   }
 }
 ```
@@ -119,11 +84,15 @@ Accepts a payload to trigger the stock price monitoring task.
 
 ```json
 {
-  "channel_id": "test-channel",
-  "return_url": "https://ping.telex.im/v1/webhooks/test",
+  "return_url": "https://ping.telex.im/v1/return/<your-test-telex-channel-id>",
   "settings": [
-    { "label": "symbol-1", "default": "AAPL" },
-    { "label": "interval", "default": "*/5 * * * *" }
+    { "label": "symbol-1", "type": "text", "default": "AAPL" },
+    { "label": "symbol-2", "type": "text", "default": "MSFT" },
+    { "label": "symbol-3", "type": "text", "default": "GOOGL" },
+    { "label": "symbol-4", "type": "text", "default": "AMZN" },
+    { "label": "symbol-5", "type": "text", "default": "TSLA" },
+    { "label": "symbol-6", "type": "text", "default": "META" },
+    { "label": "interval", "type": "dropdown", "default": "0 * * * *" }
   ]
 }
 ```
@@ -132,7 +101,29 @@ Accepts a payload to trigger the stock price monitoring task.
 
 ```json
 {
-  "status": "accepted"
+  "success": true,
+  "message": "Tick received and scheduled"
+}
+```
+
+### POST /stop
+
+Stops the scheduled cron job for the specified return URL.
+
+**Request Body:**
+
+```json
+{
+  "return_url": "https://ping.telex.im/v1/return/<your-test-telex-channel-id>"
+}
+```
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "message": "Job stopped successfully"
 }
 ```
 
@@ -171,4 +162,4 @@ npm test
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the LICENSE file for details.
