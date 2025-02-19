@@ -71,14 +71,15 @@ const createApp = () => {
             type: "dropdown",
             description: "Select how frequently you want to receive stock price updates (hourly intervals).",
             required: true,
-            default: "*/5 * * * *", // Every 5 minutes
+            default: "0 * * * *", // Every hour
             options: [
-            "*/5 * * * *",   // Every 5 minutes
-            "*/10 * * * *",  // Every 10 minutes
-            "*/20 * * * *",  // Every 20 minutes
-            "*/30 * * * *",  // Every 30 minutes
-            "*/40 * * * *"   // Every 40 minutes
-          ]          
+              "0 * * * *",   // Every hour
+              "0 */2 * * *",  // Every 2 hours
+              "0 */3 * * *",  // Every 3 hours
+              "0 */4 * * *",  // Every 4 hours
+              "0 */5 * * *",  // Every 5 hours
+              "0 */6 * * *",  // Every 6 hours
+            ]          
           }
         ],
         tick_url: `${baseUrl}/tick`,
