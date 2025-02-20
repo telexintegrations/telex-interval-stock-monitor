@@ -168,6 +168,12 @@ app.post('/tick', async (req, res) => {
 });
 
 
+
+app.post('/webhook', (req, res) => {
+  console.log('Webhook received:', req.body); // Logs Telex's response
+  res.sendStatus(200); // Responds OK to Telex
+});
+  
   // stop monitoring
 
   app.post('/stop', (req, res) => {
