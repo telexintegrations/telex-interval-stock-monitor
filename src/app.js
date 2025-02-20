@@ -147,7 +147,8 @@ app.post('/tick', async (req, res) => {
         }
     }
 
-    const interval = settings.find(s => s.label === 'interval')?.default || '* * * * *';
+    const intervalSetting = settings.find(s => s.label === 'interval');
+    const interval = intervalSetting ? intervalSetting.default : '* * * * *';
 
     console.log(`Schedule: ${interval}`);
 
@@ -166,7 +167,6 @@ app.post('/tick', async (req, res) => {
     activeJobs.set(return_url, job);
     res.json({ success: true, message: 'Tick received and scheduled' });
 });
-
 
 
 app.post('/webhook', (req, res) => {
