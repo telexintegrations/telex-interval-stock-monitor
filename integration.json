@@ -1,12 +1,23 @@
 {
   "data": {
+    "date": {
+      "created_at": "2025-02-18",
+      "updated_at": "2025-03-18"
+    },
     "descriptions": {
       "app_name": "Stock Price Monitor",
-      "app_description": "Monitors stock prices",
-      "app_url": "http://localhost:8000",
+      "app_description": "Monitors stock prices using real-time data",
+      "app_url": "http://telex-interval-stock-monitor.onrender.com",
       "app_logo": "https://i.imgur.com/lZqvffp.png",
       "background_color": "#fff"
     },
+    "integration_category": "Finance & Payments",
+    "key_features": [
+      "Monitor up to 6 customizable stock symbols",
+      "Receive real-time price updates via webhook",
+      "Configurable update intervals using cron syntax",
+      "Built with Node.js, Express, and Finage API"
+    ],
     "integration_type": "interval",
     "settings": [
       {
@@ -22,12 +33,46 @@
         "default": "MSFT"
       },
       {
-        "label": "interval",
+        "label": "symbol-3",
         "type": "text",
         "required": true,
-        "default": "* * * * *"
+        "default": "GOOGL"
+      },
+      {
+        "label": "symbol-4",
+        "type": "text",
+        "required": true,
+        "default": "AMZN"
+      },
+      {
+        "label": "symbol-5",
+        "type": "text",
+        "required": true,
+        "default": "TSLA"
+      },
+      {
+        "label": "symbol-6",
+        "type": "text",
+        "required": true,
+        "default": "META"
+      },
+      {
+        "label": "interval",
+        "type": "dropdown",
+        "description": "Select how frequently you want to receive stock price updates.",
+        "required": true,
+        "default": "*/15 * * * *",
+        "options": [
+          "*/5 * * * *",
+          "*/10 * * * *",
+          "*/15 * * * *",
+          "*/20 * * * *",
+          "*/30 * * * *",
+          "*/40 * * * *"
+        ]
       }
     ],
-    "tick_url": "http://localhost:8000/tick"
+    "tick_url": "http://telex-interval-stock-monitor.onrender.com/tick",
+    "target_url": "http://telex-interval-stock-monitor.onrender.com/api/integration"
   }
 }
