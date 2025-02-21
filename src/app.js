@@ -72,18 +72,10 @@ const createApp = () => {
           { label: "symbol-6", type: "text", required: true, default: "META" },
           {
             label: "interval",
-            type: "dropdown",
+            type: "text",
             description: "Select how frequently you want to receive stock price updates.",
             required: true,
-            default: "*/15 * * * *",
-            options: [
-            "*/5 * * * *",
-            "*/10 * * * *",
-            "*/15 * * * *",
-            "*/20 * * * *",
-            "*/30 * * * *",
-            "*/40 * * * *"
-          ]          
+            default: "*/20 * * * *" // Default: every 15 minutes         
           }
         ],
         tick_url: `${baseUrl}/tick`,
