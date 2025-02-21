@@ -75,7 +75,7 @@ const createApp = () => {
             type: "text",
             description: "Select how frequently you want to receive stock price updates.",
             required: true,
-            default: "*/20 * * * *" // Default: every 15 minutes         
+            default: "*/5 * * * *"   
           }
         ],
         tick_url: `${baseUrl}/tick`,
