@@ -68,7 +68,13 @@ Returns the integration schema for the Telex interval integration.
       { "label": "symbol-4", "type": "text", "required": true, "default": "AMZN" },
       { "label": "symbol-5", "type": "text", "required": true, "default": "TSLA" },
       { "label": "symbol-6", "type": "text", "required": true, "default": "META" },
-      { "label": "interval", "type": "dropdown", "required": true, "default": "0 * * * *", "options": [ "0 * * * *", "0 */2 * * *", "0 */3 * * *", "0 */4 * * *", "0 */5 * * *", "0 */6 * * *" ] }
+      {
+            "label": "interval",
+            "type": "text",
+            "description": "Select how frequently you want to receive stock price updates.",
+            "required": true,
+            "default": "*/5 * * * *"   
+          }
     ],
     "tick_url": "https://deployed-app.com/api/tick",
     "target_url": "https://deployed-app.com/api/integration"  
@@ -92,7 +98,7 @@ Accepts a payload to trigger the stock price monitoring task.
     { "label": "symbol-4", "type": "text", "default": "AMZN" },
     { "label": "symbol-5", "type": "text", "default": "TSLA" },
     { "label": "symbol-6", "type": "text", "default": "META" },
-    { "label": "interval", "type": "dropdown", "default": "0 * * * *" }
+    { "label": "interval", "type": "dropdown", "default": "*/5 * * * *" }
   ]
 }
 ```
