@@ -51,7 +51,7 @@ const createApp = () => {
           app_name: "Stock Price Monitor",
           app_description: "Monitors stock prices using real-time data",
           app_url: baseUrl,
-          app_logo: "../src/lZqvffp.png",
+          app_logo: "https://imgur.com/a/CqdY33y",
           background_color: "#fff",
         },
         integration_category: "Finance & Payments",
