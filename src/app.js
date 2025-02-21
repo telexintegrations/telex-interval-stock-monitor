@@ -200,13 +200,12 @@ app.post('/webhook', (req, res) => {
   return app;
 };
 
-/// Start server unless in test environment
+// Start server unless in test environment
 if (process.env.NODE_ENV !== 'test') {
-  const baseUrl = `http://localhost`;
   const server = createApp().listen(port, () => {
-    console.log(`Stock Monitor running on ${baseUrl}:${port}`);
+    console.log(`Stock Monitor running on http://localhost:${port}`);
   });
 }
 
-// Export server for testing and further use
-module.exports = { createApp, server };
+// Export for testing
+module.exports = createApp();
