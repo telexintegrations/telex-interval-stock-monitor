@@ -144,13 +144,15 @@ app.post('/tick', async (req, res) => {
 
     console.log(`Schedule: ${interval}`);
 
-    // Prevent duplicate scheduling
+    // Stop any existing job for the return_url
     if (activeJobs.has(return_url)) {
-        console.log(`Cron job for ${return_url} already scheduled`);
-        return res.json({ success: true, message: 'Tick already scheduled' });
+        console.log(`Stopping existing cron job for ${return_url}`);
+        const existingJob = activeJobs.get(return_url);
+        existingJob.stop();
+        activeJobs.delete(return_url);
     }
 
-    // Schedule and store the job
+    // Schedule and store the new job
     const job = cron.schedule(interval, async () => {
         console.log(`Running scheduled task for return_url: ${return_url}`);
         await monitorTask({ return_url, settings });
@@ -159,7 +161,6 @@ app.post('/tick', async (req, res) => {
     activeJobs.set(return_url, job);
     res.json({ success: true, message: 'Tick received and scheduled' });
 });
-
 
 app.post('/webhook', (req, res) => {
   console.log('Webhook received:', req.body); // Logs Telex's response
@@ -199,12 +200,13 @@ app.post('/webhook', (req, res) => {
   return app;
 };
 
-// Start server unless in test environment
+/// Start server unless in test environment
 if (process.env.NODE_ENV !== 'test') {
+  const baseUrl = `http://localhost`;
   const server = createApp().listen(port, () => {
-    console.log(`Stock Monitor running on http://localhost:${port}`);
+    console.log(`Stock Monitor running on ${baseUrl}:${port}`);
   });
 }
 
-// Export for testing
-module.exports = createApp();
+// Export server for testing and further use
+module.exports = { createApp, server };
