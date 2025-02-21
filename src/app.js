@@ -152,13 +152,6 @@ app.post('/tick', async (req, res) => {
         activeJobs.delete(return_url);
     }
 
-    // Stop all active jobs to ensure no old jobs are running
-    activeJobs.forEach((job, url) => {
-        console.log(`Stopping existing cron job for ${url}`);
-        job.stop();
-        activeJobs.delete(url);
-    });
-
     // Schedule and store the new job
     const job = cron.schedule(interval, async () => {
         console.log(`Running scheduled task for return_url: ${return_url}`);
